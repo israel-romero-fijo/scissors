@@ -1,0 +1,128 @@
+{
+  "$defs": {
+    "PluginOperation": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "pattern": "^[a-z][a-z0-9_]*\\.[a-z][a-z0-9_]*$",
+          "title": "Name",
+          "type": "string"
+        },
+        "description": {
+          "minLength": 1,
+          "title": "Description",
+          "type": "string"
+        },
+        "input_schema": {
+          "additionalProperties": true,
+          "title": "Input Schema",
+          "type": "object"
+        },
+        "output_schema": {
+          "additionalProperties": true,
+          "title": "Output Schema",
+          "type": "object"
+        },
+        "examples": {
+          "items": {
+            "additionalProperties": true,
+            "type": "object"
+          },
+          "title": "Examples",
+          "type": "array"
+        },
+        "side_effects": {
+          "default": true,
+          "title": "Side Effects",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "name",
+        "description",
+        "input_schema"
+      ],
+      "title": "PluginOperation",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "id": {
+      "pattern": "^[a-z][a-z0-9_]{0,63}$",
+      "title": "Id",
+      "type": "string"
+    },
+    "name": {
+      "title": "Name",
+      "type": "string"
+    },
+    "version": {
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "title": "Version",
+      "type": "string"
+    },
+    "api_version": {
+      "const": "1.0",
+      "title": "Api Version",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "author": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Author"
+    },
+    "entrypoint": {
+      "default": "plugin.py",
+      "title": "Entrypoint",
+      "type": "string"
+    },
+    "dependencies": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Dependencies",
+      "type": "array"
+    },
+    "permissions": {
+      "items": {
+        "enum": [
+          "scene.read",
+          "scene.write"
+        ],
+        "type": "string"
+      },
+      "title": "Permissions",
+      "type": "array"
+    },
+    "operations": {
+      "items": {
+        "$ref": "#/$defs/PluginOperation"
+      },
+      "minItems": 1,
+      "title": "Operations",
+      "type": "array"
+    }
+  },
+  "required": [
+    "id",
+    "name",
+    "version",
+    "api_version",
+    "description",
+    "operations"
+  ],
+  "title": "PluginManifest",
+  "type": "object"
+}

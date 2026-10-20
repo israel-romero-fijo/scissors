@@ -1,0 +1,43 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "scissors"
+version = "0.1.0"
+description = "Local, extensible, agent-first 3D modeling engine"
+readme = "README.md"
+requires-python = ">=3.12"
+license = "MIT"
+dependencies = [
+  "numpy>=2.2,<3", "trimesh>=4.6,<6", "pillow>=11,<13",
+  "pydantic>=2.10,<3", "fastapi>=0.115,<1", "uvicorn>=0.34,<1",
+  "mcp>=2.3,<3", "jsonschema>=4.23,<5", "filelock>=3.17,<4", "packaging>=25,<27",
+  "manifold3d>=3.5.4,<4", "xatlas>=0.0.10,<1", "vtk>=9.5,<10",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.3", "pytest-asyncio>=0.25", "httpx>=0.28", "ruff>=0.11", "mypy>=1.15", "types-jsonschema", "types-Pillow", "pyyaml>=6"]
+
+[project.scripts]
+scissors = "scissors.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/scissors"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+markers = ["integration: real CLI, MCP, plugin processes or geometry backends"]
+
+[tool.ruff]
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.mypy]
+python_version = "3.12"
+check_untyped_defs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true

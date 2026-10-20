@@ -1,0 +1,29 @@
+{
+  "id": "twist_mesh",
+  "name": "Progressive axis twist",
+  "version": "1.0.0",
+  "api_version": "1.0",
+  "description": "Twist vertices progressively along an axis using deterministic NumPy geometry.",
+  "author": "Scissors contributors",
+  "entrypoint": "plugin.py",
+  "dependencies": ["numpy>=2.2,<3"],
+  "permissions": ["scene.read", "scene.write"],
+  "operations": [{
+    "name": "deform.twist_mesh",
+    "description": "Rotate cross-sections progressively around the object bounds center. Angle is reached at the positive end of the axis; zero at the negative end.",
+    "input_schema": {
+      "type": "object",
+      "properties": {
+        "object_id": {"type": "string"},
+        "axis": {"type": "string", "enum": ["x", "y", "z"], "default": "z"},
+        "angle_degrees": {"type": "number", "minimum": -3600, "maximum": 3600, "default": 90},
+        "falloff": {"type": "string", "enum": ["linear", "smoothstep"], "default": "linear"}
+      },
+      "required": ["object_id"],
+      "additionalProperties": false
+    },
+    "output_schema": {"type": "object", "required": ["object_id", "vertex_count", "face_count"]},
+    "examples": [{"object_id": "obj_FROM_CREATE", "axis": "z", "angle_degrees": 120, "falloff": "smoothstep"}],
+    "side_effects": true
+  }]
+}
