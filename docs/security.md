@@ -11,6 +11,16 @@ and plugin lifecycle effects. Multi-file exports are individually atomic; unrefe
 artifacts may remain after filesystem failure, but the scene checkpoint remains coherent.
 
 Settings cap geometry counts, estimated memory, image pixels, files and worker time.
+FBX parsing runs in the same timed geometry child through ufbx. Automatic external-file
+loading is disabled. Only the workspace resolver reads referenced image files; remote,
+absolute, escaped and reserved engine paths (including `.geometry`) are rejected.
+Embedded images are decoded with Pillow's pixel bounds. Native parsers can allocate before
+post-load geometry and memory checks; these checks are not a hard memory sandbox.
+Rig retention also reads a bounded binary document grammar, including bounded array
+decompression and nesting depth. It embeds source Video images through the same resolver.
+Retained documents are content-addressed under assets/fbx_documents, protected from public
+artifact writes, and checked by SHA-256 at export. They retain original source data,
+including data that the static scene view does not interpret.
 Native operations are bounded but not all preemptively cancellable. POSIX plugin workers
 use RLIMIT_AS/RLIMIT_FSIZE; Windows uses timeout/output limits without a hard memory
 ceiling. This is not a hardened hostile-code executor.

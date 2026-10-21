@@ -83,6 +83,33 @@ files, not download URLs. MCP has no arbitrary file upload/download or general f
 interface. Texture import and plugin validation require files already in that workspace;
 place them using available local filesystem tools or ask the operator to do so.
 
+## FBX import
+
+Use the built-in `scene.import_mesh` operation with a workspace-relative `.fbx` path.
+`modeler.info.backends.import_fbx` reports the included ufbx reader. Binary and ASCII
+FBX need no external converter. The importer retains static geometry, UV/normal/color
+seams, hierarchy, instances, material bindings and supported embedded/relative images.
+It converts the declared axes and units to right-handed Z-up destination scene units.
+`source_up` overrides axes, while `scale` is an additional multiplier and `position`
+uses destination scene units. `source_unit_meters` reports the original declared unit.
+Phong/Lambert materials are approximated as PBR. Inspect returned warnings and preview
+the imported material. Skins, blend shapes and animation are not evaluated. Bake
+layered/procedural textures, transformed texture coordinates and maps on additional UV
+sets; triangulate polygon holes. Separate opacity maps are omitted with a warning.
+Missing supported external images fail import, and all image reads remain inside the
+workspace. Static FBX exports use PNG sidecars.
+
+Binary FBX defaults to `fbx_mode="preserve"` when rig, blend-shape or animation data exists.
+The result includes `rig`; `scene.inspect` lists retained `rigs`. Use a new/empty scene,
+source_up="auto", scale=1 and no position. Retained documents embed their source images
+and keep original axes and units at complete FBX export. The bind-pose view is normalized
+to Z-up. Animation playback and rig editing are unavailable. Keep scene membership,
+hierarchy, placement and materials unchanged. Conservative simplification remaps surviving
+original positions/UV to exact original skin weights. Arbitrary weight transfer and edits
+with extra deformers are unsupported. Other formats, partial/split/LOD exports and root
+renaming fail explicitly. `fbx_mode="static"` deliberately discards source rig/animation.
+Keep `assets/fbx_documents` with state.json when relocating a workspace.
+
 ## Mesh simplification
 
 Discover and describe `mesh.simplify` before using it. It is a native operation.

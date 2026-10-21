@@ -64,6 +64,8 @@ def register_native(registry: OperationRegistry, engine: Engine) -> None:
                 "boolean": importlib.util.find_spec("manifold3d") is not None,
                 "xatlas": importlib.util.find_spec("xatlas") is not None,
                 "simplify": simplification_available(),
+                "import_fbx": importlib.util.find_spec("ufbx") is not None,
+                "preserve_fbx_rig": importlib.util.find_spec("ufbx") is not None,
                 "organic": simplification_available(),
                 "preview_vtk": vtk_capability()[0],
                 "preview_fallback": "pillow",
@@ -99,6 +101,7 @@ def register_native(registry: OperationRegistry, engine: Engine) -> None:
         scene = engine.scene(scene_id)
         scene.objects.clear()
         scene.materials.clear()
+        scene.fbx_documents.clear()
         return scene.summary()
 
     def scene_save(scene_id: str, output: str | None = None) -> dict[str, Any]:
@@ -795,7 +798,9 @@ def register_native(registry: OperationRegistry, engine: Engine) -> None:
     add(
         "scene.export",
         scene_export,
-        "Export GLB/glTF/OBJ/STL/PLY/DAE/USDZ/binary FBX with selection, root transform and LODs.",
+        "Export GLB/glTF/OBJ/STL/PLY/DAE/USDZ/binary FBX with selection, root transform and LODs. "
+        "Retained FBX rigs require complete FBX export, unchanged placement/materials, "
+        "and no split, root rename, LODs or export transform.",
         True,
         ["filesystem.write"],
     )

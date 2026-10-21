@@ -61,7 +61,17 @@ def binary_file(nodes: list[Node], context: ExchangeContext) -> bytes:
         if isinstance(value, bytes):
             return b"R" + struct.pack("<I", len(value)) + value
         if isinstance(value, np.ndarray):
-            code, dtype = (b"i", "<i4") if value.dtype.kind in "iu" else (b"d", "<f8")
+            if value.dtype.kind in "iu":
+                if value.dtype.itemsize == 1:
+                    code, dtype = (b"b", "|u1") if value.dtype.kind == "u" else (b"c", "|i1")
+                else:
+                    code, dtype = (b"l", "<i8") if value.dtype.itemsize > 4 else (b"i", "<i4")
+            elif value.dtype.kind == "b":
+                code, dtype = b"b", "|u1"
+            elif value.dtype.kind == "f":
+                code, dtype = (b"f", "<f4") if value.dtype.itemsize <= 4 else (b"d", "<f8")
+            else:
+                raise TypeError("Unsupported internal FBX array dtype")
             data = np.asarray(value, dtype=dtype).reshape(-1).tobytes()
             return code + struct.pack("<III", value.size, 0, len(data)) + data
         raise TypeError("Unsupported internal FBX property")

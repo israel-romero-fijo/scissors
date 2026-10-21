@@ -203,6 +203,11 @@ def export_delivery(
     require_target: bool,
 ) -> dict[str, Any]:
     view = selection_view(engine, scene_id, only, exclude)
+    if engine.scene(scene_id).fbx_documents and (material_split or lods):
+        raise ScissorsError(
+            "UNSUPPORTED_OPERATION",
+            "Retained rigs do not support material splitting or export LODs",
+        )
     geometry_bytes = sum(
         len(obj.vertices) * 384 + len(obj.faces) * 192 for obj in view.objects.values()
     )

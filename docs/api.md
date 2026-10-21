@@ -125,7 +125,8 @@ Stable errors: UNKNOWN_OPERATION, INVALID_PARAMETER, SCENE_NOT_FOUND, OBJECT_NOT
 MATERIAL_NOT_FOUND, TEXTURE_NOT_FOUND, GEOMETRY_ERROR, RESOURCE_LIMIT, PERMISSION_DENIED,
 WORKSPACE_BUSY, WORKSPACE_CLOSED, INCOMPATIBLE_FORMAT, BATCH_FAILED, OPERATION_COLLISION,
 PLUGIN_INVALID, PLUGIN_NOT_FOUND, PLUGIN_COLLISION, PLUGIN_DEPENDENCY,
-PLUGIN_FAILED, PLUGIN_STORE_BUSY, OPERATION_TIMEOUT, BACKEND_UNAVAILABLE, INTERNAL_ERROR.
+PLUGIN_FAILED, PLUGIN_STORE_BUSY, OPERATION_TIMEOUT, BACKEND_UNAVAILABLE,
+UNSUPPORTED_OPERATION, INTERNAL_ERROR.
 
 Settings caps counts, estimated geometry memory, file size, pixels and worker timeout.
 `Settings.plugins_dir` selects the application plugin store, shared by workspaces. Its default
@@ -345,7 +346,7 @@ welded topology; boundaries stay fixed by default and volume can shrink.
 `mesh.fill_holes(object_id, max_edges=64, selection=null, method="projected",
 refinement=2, tangent_tolerance_degrees=20)` closes boundary loops with new patches.
 A patch is a surface added inside an existing boundary. With no selection, the
-operation fills every loop whose edge count is at most `max_edges` (3–512).
+operation fills every loop whose edge count is at most `max_edges` (3ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“512).
 To keep windows or other openings, pass a `mesh.select_boundaries` result restricted
 to the desired `loop_indices`. Stored boundary selections are also accepted.
 Consumed fields are `object_id`, `geometry_revision`, and a nonempty unique
@@ -405,7 +406,7 @@ The radius must not exceed half the smaller base dimension.
 Edge bevel chamfers the upper and lower edges and must be smaller than half every dimension.
 
 `mesh.create_tube(points, radius, sides=8, caps=True, closed=False)` sweeps circular
-sections along 2ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ256 three-component points. Sides range from 3 to 32.
+sections along 2ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“256 three-component points. Sides range from 3 to 32.
 Parallel transport avoids arbitrary twist. Closed loops distribute frame mismatch.
 Repeated points and abrupt reversals are rejected with a point index.
 
@@ -651,7 +652,7 @@ relationships when their source is copied too. Geometry memory limits apply befo
 Coordinates are copied numerically; units are not converted between scenes.
 
 `scene.checkpoint(scene_id, name)` saves or replaces a named checkpoint atomically.
-Names contain 1ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ64 ASCII letters, digits, underscores or hyphens and start with a letter/digit.
+Names contain 1ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦Ãƒâ€šÃ‚Â¡ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“64 ASCII letters, digits, underscores or hyphens and start with a letter/digit.
 Files live under the reserved `.checkpoints` workspace directory. They retain stable scene,
 object and material IDs and relative references to immutable texture files. They survive
 restart and workspace relocation. They are not standalone bundles of texture pixels.
@@ -689,10 +690,12 @@ app.call("scene.checkpoint", scene_id=scene.id, name="shape")
 
 ### Imported assets and image planes
 
-`scene.import_mesh(path, scene_id=None)` reads local OBJ, STL, GLB or PLY.
+`scene.import_mesh(path, scene_id=None)` reads local OBJ, STL, GLB, PLY or FBX.
 Omitting scene_id creates a scene. Existing scenes receive a named import root group.
 The reader runs in the geometry child with a timeout and bounded source/sidecar bytes,
-geometry counts, image pixels and output. It uses the existing Trimesh/Pillow dependencies.
+geometry counts, image pixels and output. Trimesh/Pillow handle common formats;
+the required `ufbx` library reads binary and ASCII FBX. Quads use a stable diagonal;
+VTK triangulates larger polygons in a best-fit plane.
 Parsing can allocate memory before post-load checks; this is not an OS sandbox on Windows.
 Paths must stay inside the workspace. OBJ sidecars may use sibling workspace folders.
 Remote URIs, escaped paths and reserved engine/plugin paths are rejected.
@@ -700,13 +703,53 @@ Missing or failed sidecars fail the import instead of silently dropping referenc
 
 The importer preserves hierarchy, instances, triangles, UV, normals, vertex colors and
 supported PBR channels. Face colors split render vertices to keep discontinuities.
-Multi-material meshes split into parts. Cameras, lights, skins and animation are omitted
-with a warning. Alpha MASK is approximated as BLEND. Other unsupported source extensions
+Multi-material meshes split into parts. Cameras and lights are omitted from the scene view.
+GLB skins and animation are omitted with a warning. FBX retention is described below. Alpha MASK is approximated as BLEND. Other unsupported source extensions
 are not represented by the Scissors model. GLB auto-converts Y-up to Z-up.
 OBJ/STL/PLY default to Z-up. Override source_up with "x", "y" or "z" when needed.
 Positive scale changes dimensions uniformly; position applies a world translation.
-Units are not inferred. Transforms bake once and remain recorded. Output IDs are new.
+OBJ/STL/GLB/PLY units are not inferred. FBX uses its declared axes, handedness and unit scale.
+Automatic FBX conversion produces right-handed Z-up geometry in meters for a new scene,
+or in the destination scene's units when extending an existing scene. Explicit `source_up`
+overrides the FBX axis metadata while retaining its unit conversion. `scale` is an additional
+multiplier, and `position` is in destination scene units.
+Transforms bake once and remain recorded. Output IDs are new.
 Images become new managed PNGs; a late failure may leave unused new image files.
+
+FBX preserves static mesh instances, per-instance material assignments, polygon triangulation,
+UV/normal/color seams and geometric transforms that do not affect child nodes. Embedded images
+take precedence over stale file paths. External images must use workspace-contained relative
+paths and share the source/sidecar byte budget. Phong/Lambert materials are approximated as PBR.
+Supported image slots are base color, normal, emission, occlusion, roughness and metallic;
+separate roughness/metallic images become a combined texture. Scissors FBX material factors
+and ORM/occlusion image properties are recognized. `modeler.info.backends.import_fbx` reports reader availability.
+FBX previews show the base mesh without animation or blend-shape evaluation.
+The default `fbx_mode="preserve"` retains binary FBX rigs, animation curves, bind matrices
+and embedded source media in an immutable workspace document. The result includes `rig`;
+`scene.inspect` lists retained `rigs`. Complete FBX export preserves the original document,
+including source axes and units. This mode requires a new/empty scene, automatic axes,
+scale=1 and no position. Materials and rig placement must stay unchanged.
+Conservative mesh edits can retain original vertex positions/UV and remap exact skin weights.
+Other formats, partial scenes, material splitting, LOD export and unsupported edits fail
+with `UNSUPPORTED_OPERATION`, rather than silently dropping the rig.
+Set `fbx_mode="static"` to discard source rig/animation explicitly.
+See [FBX rig retention](fbx-rig.md) for the supported workflow and limits.
+Layered/procedural textures, texture transforms, maps using additional UV sets and polygon holes
+must be baked or triangulated before import. Separate opacity maps are omitted with a warning;
+base image alpha and the opacity factor are retained. Arbitrary shader graphs are not reproduced.
+
+```python
+result = app.call("scene.import_mesh", path="assets/model.fbx")
+object_id = result["object_ids"][0]
+app.call("mesh.simplify", object_id=object_id, reduction_percent=50)
+app.call("scene.export", scene_id=result["scene_id"], output="exports/model.fbx", format="fbx")
+```
+
+The CLI uses the same registered operation:
+
+```bash
+uv run scissors --workspace workspaces/agents operations invoke scene.import_mesh --arguments '{"path":"assets/model.fbx"}'
+```
 
 Imported colors persist, follow affine transforms, survive copying/atlas merging and export
 as glTF COLOR_0. General topology edits currently discard them. Previews shade vertex
@@ -911,7 +954,7 @@ Parameters:
 
 - `output_path` stays inside the workspace and cannot use reserved paths or replace
   texture dependencies. ZIP output requires a `.zip` suffix. A directory cannot use it.
-- `variants` contains 1ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“8 named presets. Names use 1ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“64 ASCII letters, digits,
+- `variants` contains 1ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ8 named presets. Names use 1ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ64 ASCII letters, digits,
   underscores, or hyphens, start with a letter/digit, and are unique ignoring case.
   Windows device names are rejected. Omission selects `hierarchy` and `material_batches`.
   Each variant currently supports `format="glb"` only.
@@ -927,7 +970,7 @@ Parameters:
   files can be omitted because GLBs embed their images and buffers.
 - `preview_views` reuses the typed orbit and explicit-camera views of `scene.render_sheet`.
   `preview_view_sets` reuses its named head/stereo helper. Both are optional.
-  `preview_size` is 64ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“2048, default 256. `preview_renderer` is `auto`, `vtk`, or `pillow`.
+  `preview_size` is 64ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Â¦ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œ2048, default 256. `preview_renderer` is `auto`, `vtk`, or `pillow`.
   The package retains a sheet, its individual tiles, and actual camera metadata.
 - `report=true` includes `report.json` with actual mesh validation results and limitations.
   It does not request mesh self-intersection checks. `README.txt` records import/setup notes.
@@ -1214,7 +1257,8 @@ OpenUSD or a new optional feature installation.
 | DAE | COLLADA 1.4.1 XML; geometry instances, hierarchy, affine matrices, normals, UV and RGBA | Phong approximation; base/emission textures; other PBR images retained through SCISSORS extras |
 | USDZ | USDA root layer plus PNG images; uncompressed ZIP with each payload aligned to 64 bytes | USD Preview Surface with base/normal/metallic/roughness/emissive/occlusion maps, alpha and double-sided flags |
 
-All three retain Z-up coordinates and declare meters per scene unit. FBX expresses this in
+Static exports in all three formats retain Z-up coordinates and declare meters per scene unit.
+Retained FBX documents instead keep their original axes and units (see [rig retention](fbx-rig.md)). FBX expresses this in
 centimeters per unit as required by its metadata. Importers choose whether to honor those
 declarations. Vertices already contain engine transforms; the shared export graph is used
 once, rather than applying the diagnostic transform twice. FBX uses RSrs matrix inheritance.
@@ -1241,8 +1285,9 @@ subject to the memory budget. An image that cannot fit still fails explicitly.
 USD keeps
 the images and applies factors in shader nodes. Source texture files remain unchanged.
 Geometry, images, serialized bytes, hierarchy depth and elapsed time have resource limits.
-No scripts, rigging or animation are emitted. Fixed authoring timestamps support repeatable
-output and do not represent the export time. Files publish through the same atomic writer;
+The static writers do not create scripts, rigging or animation.
+The separate retained-FBX path preserves source rig and animation data. Static writers use fixed authoring timestamps for repeatable
+output; retained documents keep source authoring timestamps. Files publish through the same atomic writer;
 a late filesystem error can still leave earlier sidecars or the primary file on disk.
 
 External consumer compatibility is unverified. Open exported files in the intended
@@ -1313,7 +1358,7 @@ The response contains `name` and the canonical `selection`.
 `mesh.selection_list(object_id)` returns names, kinds, counts, stored revisions
 and `stale` status. `mesh.selection_delete(object_id, name)` removes an entry,
 including a stale entry. Save and delete require `scene.write`; get and list
-require `scene.read`. Names contain 1–128 characters and must include a non-space
+require `scene.read`. Names contain 1ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“128 characters and must include a non-space
 character. Existing names require `overwrite=true`.
 
 Selections persist in workspace state and scene snapshots. Geometry edits do not

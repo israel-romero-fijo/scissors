@@ -2,6 +2,7 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field
 
+from scissors.core.fbx_document import FbxDocument
 from scissors.core.materials import Material
 from scissors.core.mesh import MeshObject
 
@@ -16,6 +17,7 @@ class Scene(BaseModel):
     format_version: int = 1
     objects: dict[str, MeshObject] = Field(default_factory=dict)
     materials: dict[str, Material] = Field(default_factory=dict)
+    fbx_documents: list[FbxDocument] = Field(default_factory=list)
 
     def summary(self) -> dict[str, Any]:
         return {
@@ -26,6 +28,7 @@ class Scene(BaseModel):
             "coordinates": self.coordinates,
             "format_version": self.format_version,
             "metadata": self.metadata,
+            "rigs": [document.summary for document in self.fbx_documents],
             "objects": [obj.summary() for obj in self.objects.values()],
             "materials": [mat.model_dump() for mat in self.materials.values()],
         }

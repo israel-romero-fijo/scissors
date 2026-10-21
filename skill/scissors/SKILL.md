@@ -256,11 +256,27 @@ digits, underscores or hyphens. Checkpoints reference workspace textures and sur
 Keep texture files with the workspace. Checkpoint writes cannot join atomic edits.
 Read-only compare/restore can join scene.edit or app.transaction. Only scene changes roll back.
 
-Use scene.import_mesh for local OBJ/STL/GLB/PLY. Provide scene_id to extend a scene;
+Use scene.import_mesh for local OBJ/STL/GLB/PLY/FBX. Provide scene_id to extend a scene;
 omit it for a new scene. Paths and sidecars must stay in the workspace. Remote URIs are
-unsupported. GLB uses Y-up conversion automatically; other formats default to Z-up.
+unsupported. GLB uses Y-up conversion automatically; OBJ/STL/PLY default to Z-up.
+Binary/ASCII FBX uses the included ufbx reader, with no manual conversion. It reads axes
+and units from the file and converts to right-handed Z-up destination scene units.
+Embedded images are retained as managed PNGs; missing required external images fail import.
+Phong/Lambert materials are approximated as PBR. Check warnings and preview the imported
+material. Bake layered/procedural textures, texture transforms and maps on additional UV
+sets before import; triangulate polygon holes. Separate opacity maps are omitted with a
+warning. Skins, blend-shape deformation and animation are not evaluated.
 Override source_up when needed and set scale/position explicitly. Imported hierarchy,
-materials, UV and colors remain editable. Cameras, skins, lights and animation are omitted.
+materials, UV and colors remain editable in static mode. Cameras and lights are omitted
+from the bind-pose view. Binary FBX defaults to fbx_mode="preserve" for rig/animation
+retention. Use a new/empty scene, automatic axes, scale=1 and no position. Inspect result.rig
+and scene.inspect.rigs. Export the complete scene as FBX without selection, transform,
+root rename, material splitting or LODs. Source axes/units and original embedded media
+are preserved. Keep materials and rig placement unchanged. mesh.simplify can remap weights
+when surviving positions/UV remain exact; arbitrary remeshing and weight transfer are
+unsupported. Unsupported exports fail explicitly. Animation playback is not available.
+Use fbx_mode="static" only when discarding rig/animation is intended. Keep
+assets/fbx_documents when moving the workspace. See [FBX import](references/api.md).
 Topology edits can discard vertex colors. Previews shade those colors.
 Use reference.plane with path, axis, size [width,height] and center position for measured
 image references. Hide reference geometry before export. Import/reference creation cannot
@@ -374,7 +390,8 @@ spatial contact does not prove a mechanical joint or physical support.
 
 `scene.export` and `scene.split_export` support binary FBX 7.4, DAE 1.4.1 and USDZ in
 addition to the earlier formats. Match output extension and format. Keep all returned PNG
-sidecars with FBX/DAE. Both use Phong approximations and preserve unsupported PBR channels
+sidecars with static FBX/DAE. Retained rig FBX embeds its source images.
+Static writers use Phong approximations and preserve unsupported PBR channels
 as extras. All three retain Z-up and declare scene units. USDZ embeds a USDA root layer and
 its images with aligned uncompressed members. It is not USDC; Apple compatibility is
 unverified. USD keeps vertex-color primvars, but textured shaders do not multiply them.

@@ -49,6 +49,7 @@ class WorkspaceResolver(trimesh.resolvers.Resolver):
                 "plugins",
                 ".runtime",
                 ".checkpoints",
+                ".geometry",
                 "state.json",
                 ".workspace.lock",
             }:
@@ -96,19 +97,25 @@ def read_import(value: dict[str, Any]) -> dict[str, Any]:
     resolver = WorkspaceResolver(root, source.parent, limit, {str(source): source.stat().st_size})
     Image.MAX_IMAGE_PIXELS = pixels
     warnings.simplefilter("error", Image.DecompressionBombWarning)
-    loaded = trimesh.load_scene(
-        io.BytesIO(source.read_bytes()),
-        file_type=source.suffix[1:].lower(),
-        resolver=resolver,
-        allow_remote=False,
-        process=False,
-    )
+    diagnostics: list[str] = []
+    source_info: dict[str, Any] = {}
+    if source.suffix.lower() == ".fbx":
+        from scissors.core.fbx_import import load_fbx
+
+        loaded, diagnostics, source_info = load_fbx(source, resolver, value)
+    else:
+        loaded = trimesh.load_scene(
+            io.BytesIO(source.read_bytes()),
+            file_type=source.suffix[1:].lower(),
+            resolver=resolver,
+            allow_remote=False,
+            process=False,
+        )
     if resolver.errors:
         raise ValueError(f"Import sidecar could not be read: {resolver.errors[0]}")
     textures: dict[str, str] = {}
     materials: list[dict[str, Any]] = []
     material_cache: dict[int, int] = {}
-    diagnostics = []
     image_bytes = 0
 
     def image_data(image: Image.Image | None) -> str | None:
@@ -202,6 +209,10 @@ def read_import(value: dict[str, Any]) -> dict[str, Any]:
                 if visual.kind in {"vertex", "face"}
                 else None
             )
+            if visual.kind == "texture":
+                attribute_colors = visual.vertex_attributes.get("color")
+                if attribute_colors is not None:
+                    colors = np.asarray(attribute_colors)[indices].tolist()
             if visual.kind == "face":
                 indices = faces.reshape(-1)
                 inverse = np.arange(len(indices))
@@ -215,6 +226,11 @@ def read_import(value: dict[str, Any]) -> dict[str, Any]:
                     "uv": np.asarray(uv)[indices].tolist() if uv is not None else None,
                     "vertex_colors": colors,
                     "material": material_data(mat) if mat is not None else None,
+                    **(
+                        {"fbx_binding": geometry.metadata["fbx_binding"]}
+                        if "fbx_binding" in geometry.metadata
+                        else {}
+                    ),
                 }
             )
         geometries[str(name)] = parts
@@ -241,4 +257,5 @@ def read_import(value: dict[str, Any]) -> dict[str, Any]:
         "materials": materials,
         "textures": textures,
         "diagnostics": sorted(set(diagnostics)),
+        **source_info,
     }

@@ -1,4 +1,4 @@
-"""Import and reference-plane cases. Unrun under the user's no-tests instruction."""
+"""Import and reference-plane contracts."""
 
 from pathlib import Path
 

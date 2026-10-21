@@ -318,6 +318,13 @@ def export_scene(
     path = engine.artifact_path(output)
     if path.suffix.lower() != f".{format}":
         raise ValueError("Output extension must match format")
+    retained = source_scene if source_scene is not None else engine.scene(scene_id)
+    if engine.scene(scene_id).fbx_documents:
+        from scissors.core.fbx_document import export_document
+
+        if root_name is not None:
+            raise ScissorsError("UNSUPPORTED_OPERATION", "Retained rigs keep the source FBX root")
+        return export_document(engine, retained, path, format, export_transform)
     scene = as_trimesh_scene(
         engine,
         scene_id,

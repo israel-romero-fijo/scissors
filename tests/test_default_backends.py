@@ -9,7 +9,7 @@ from scissors import Scissors
 
 
 def test_package_installs_all_geometry_backends_by_default(app):
-    names = {"manifold3d", "xatlas", "vtk"}
+    names = {"manifold3d", "xatlas", "vtk", "ufbx"}
     declared = tomllib.loads((Path(__file__).parents[1] / "pyproject.toml").read_text())
     direct = {
         Requirement(value).name: Requirement(value) for value in declared["project"]["dependencies"]

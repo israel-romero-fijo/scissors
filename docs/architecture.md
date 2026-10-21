@@ -32,6 +32,12 @@ Scene format 1 uses right-handed Z-up and named units. IDs use UUIDs independent
 Mesh stores scene-space vertices, triangular faces, normals, per-render-vertex UV, material
 ID, cumulative baked transform and metadata. PBR materials reference workspace texture IDs.
 Scene snapshots reference relative texture files; relocate whole workspaces for portability.
+Scenes can also retain an immutable binary FBX document with control-point bindings. The
+normalized scene view stays static. A separate FBX retention writer preserves source rig
+and animation records, including source axes/units. It remaps exact surviving vertex weights
+for supported conservative edits. Unsupported edits/exports fail explicitly. Retained
+documents live under assets/fbx_documents and must move with the workspace.
+See [FBX rig retention](fbx-rig.md).
 
 UV seams duplicate render vertices. Topology diagnostics weld exact matching positions;
 they do not identify self-intersections or intentional coincident components. Degenerate

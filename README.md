@@ -3,6 +3,9 @@
 Scissors lets your AI agent create and edit 3D models on your computer.
 It can work with shapes, materials and textures, then export models to GLB, glTF,
 OBJ or STL files.
+It also imports FBX files directly, including static meshes, materials and embedded
+textures. Binary FBX rigs and animation can be retained for complete FBX export.
+FBX axes and units are converted automatically for the bind-pose view; see [importing assets](docs/api.md#imported-assets-and-image-planes).
 
 Scissors has no graphical modeling window. You use it through a connected AI
 agent or scripts. It runs locally on your CPU and does not require Blender,

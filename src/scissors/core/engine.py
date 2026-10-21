@@ -98,8 +98,10 @@ class Engine:
     def artifact_path(self, value: str | Path) -> Path:
         """Keep artifact writers from changing managed or retained default texture files."""
         path = self.path(value)
-        if any(self.path(texture["path"]) == path for texture in self.textures.values()) or (
-            path.exists() and path.is_relative_to(self.root / "textures")
+        if (
+            any(self.path(texture["path"]) == path for texture in self.textures.values())
+            or (path.exists() and path.is_relative_to(self.root / "textures"))
+            or path.is_relative_to(self.root / "assets" / "fbx_documents")
         ):
             raise ScissorsError(
                 "PERMISSION_DENIED", "Artifact output cannot overwrite texture files"
@@ -152,6 +154,17 @@ class Engine:
         for sid, scene in self.scenes.items():
             if sid != scene.id or scene.format_version != 1:
                 raise ScissorsError("INCOMPATIBLE_FORMAT", "Invalid scene identifier or version")
+            for document in scene.fbx_documents:
+                if document.path != f"assets/fbx_documents/{document.sha256}.fbx" or (
+                    len(document.sha256) != 64
+                    or any(c not in "0123456789abcdef" for c in document.sha256)
+                ):
+                    raise ScissorsError("INCOMPATIBLE_FORMAT", "Invalid retained FBX reference")
+                if not self.path(document.path).is_file():
+                    raise ScissorsError("INCOMPATIBLE_FORMAT", "Missing retained FBX document")
+                memory += sum(
+                    len(binding.world_vertices) * 256 for binding in document.bindings.values()
+                )
             for oid, obj in scene.objects.items():
                 if oid != obj.id or oid in ids:
                     raise ScissorsError("INCOMPATIBLE_FORMAT", "Duplicate or mismatched object ID")
@@ -271,6 +284,8 @@ class Engine:
         """Copy one subtree with fresh IDs and preserved world geometry."""
         scene, obj = self.object(object_id)
         sources = [obj, *self.descendants(scene, object_id)]
+        if scene.fbx_documents:
+            raise ScissorsError("UNSUPPORTED_OPERATION", "Retained FBX rigs cannot copy subtrees")
         extra = sum(len(source.vertices) * 384 + len(source.faces) * 192 for source in sources)
         used = sum(
             len(source.vertices) * 384 + len(source.faces) * 192
@@ -312,6 +327,10 @@ class Engine:
     ) -> dict[str, Any]:
         """Copy world-space subtrees and material ownership into another scene."""
         source, target = self.scene(from_scene), self.scene(to_scene)
+        if source.fbx_documents or target.fbx_documents:
+            raise ScissorsError(
+                "UNSUPPORTED_OPERATION", "Retained FBX rigs cannot copy scene objects"
+            )
         if len(set(object_ids)) != len(object_ids):
             raise ValueError("Copy selection must contain unique IDs")
         missing = [oid for oid in object_ids if oid not in source.objects]

@@ -38,8 +38,8 @@ Booleans preserve interpolated UV/colors/normals and support first/source/cut ma
 Multiple material results use grouped mesh parts and combined solid statistics.
 Normals are recomputed and transforms baked. Topology welds exact-position UV seams,
 so overlapping coincident surfaces need inspection. Triangle queries reject workloads above
-`max_geometry_pairs`; adjacent faces are excluded from self-intersection queries. No rigging,
-animation, GUI or generative images. Nothing depends on Blender.
+`max_geometry_pairs`; adjacent faces are excluded from self-intersection queries. No rig editor, animation playback, GUI or generative images. Binary FBX rigs and animation
+can be retained for complete FBX export; see [FBX rig retention](fbx-rig.md). Nothing depends on Blender.
 
 Previews render through VTK offscreen when an OpenGL context exists and through a Pillow
 painter otherwise. The result reports the backend. Both share one camera model with
@@ -105,10 +105,16 @@ retain the operator's OS permissions and are enabled when the workspace opens. S
 
 ## Included geometry backends
 
-Native import reads local OBJ/STL/GLB/PLY through the timed geometry child. It preserves
+Native import reads local OBJ/STL/GLB/PLY/FBX through the timed geometry child. It preserves
 hierarchy, geometry, UV, normals, colors and supported PBR channels. Remote and escaped
-sidecars are rejected. GLB converts Y-up to Z-up. Reference image planes support measured
-size and world placement. Cameras, skins, animation and lights are not imported.
+sidecars are rejected. GLB converts Y-up to Z-up. Binary/ASCII FBX uses ufbx to retain
+static geometry, material bindings and embedded images, and converts declared axes/units
+to right-handed Z-up scene units. Phong materials are approximated as PBR; shader graphs,
+texture transforms, additional texture UV sets and polygon holes require prior baking or
+triangulation. See [import behavior and limits](api.md#imported-assets-and-image-planes).
+Reference image planes support measured
+size and world placement. Cameras and lights are not rendered by the imported scene view.
+The bind-pose view is static; original binary FBX rig/animation documents can be retained.
 
 Native image tools draw labels, compose layers, resize, crop, rotate and export managed
 textures with pixel/file/memory bounds. Image sources are retained. Materials include
@@ -124,6 +130,8 @@ A standard installation includes all built-in operations:
 - `manifold3d`: Boolean union, difference and intersection.
 - `xatlas`: advanced UV generation and controlled atlas unwrapping.
 - `VTK`: mesh simplification, organic union, closed-volume reconstruction and topology repair.
+- `ufbx`: binary/ASCII FBX reading, including axes, units, static hierarchy and embedded images.
+  This required reader avoids depending on Blender or an external conversion executable.
 
 Use `uv sync` and `uv run scissors info`; no extra flags are required.
 Geometry libraries run in CPU child workers and need no display.
